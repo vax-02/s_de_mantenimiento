@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 
 interface Attachment {
   name: string;
@@ -33,7 +34,6 @@ interface Incident {
   styleUrls: ['./incidents.component.css'],
 })
 export class IncidentsComponent {
-
   // 📌 DATA
   incidents: Incident[] = [];
   filtered: Incident[] = [];
@@ -57,10 +57,22 @@ export class IncidentsComponent {
     this.refresh();
   }
 
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+
+  scrollToBottom() {
+    try {
+      this.chatContainer.nativeElement.scrollTop =
+        this.chatContainer.nativeElement.scrollHeight;
+    } catch {}
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
   // 🔍 BUSCAR
   filter() {
-    this.filtered = this.incidents.filter(i =>
-      i.title.toLowerCase().includes(this.search.toLowerCase())
+    this.filtered = this.incidents.filter((i) =>
+      i.title.toLowerCase().includes(this.search.toLowerCase()),
     );
   }
 
@@ -113,10 +125,10 @@ export class IncidentsComponent {
   }
 
   // 💬 AGREGAR COMENTARIO
-  addComment() {
+  /*addComment() {
     if (!this.newComment.trim() && this.selectedFiles.length === 0) return;
 
-    const attachments: Attachment[] = this.selectedFiles.map(file => ({
+    const attachments: Attachment[] = this.selectedFiles.map((file) => ({
       name: file.name,
       type: file.type,
       url: URL.createObjectURL(file),
@@ -131,6 +143,19 @@ export class IncidentsComponent {
 
     this.newComment = '';
     this.selectedFiles = [];
+  }*/
+  addComment() {
+    this.selected?.comments.push({
+      user: 'admin',
+      message: this.newComment,
+      date: new Date().toISOString(),
+      //attachments: this.selectedFiles,
+    });
+
+    this.newComment = '';
+    this.selectedFiles = [];
+
+    this.scrollToBottom();
   }
 
   // 🔄 CAMBIAR ESTADO (Cerrar)
@@ -162,10 +187,10 @@ export class IncidentsComponent {
   }
 
   get abiertas() {
-    return this.incidents.filter(i => i.status === 'Abierta').length;
+    return this.incidents.filter((i) => i.status === 'Abierta').length;
   }
 
   get cerradas() {
-    return this.incidents.filter(i => i.status === 'Cerrada').length;
+    return this.incidents.filter((i) => i.status === 'Cerrada').length;
   }
 }

@@ -76,11 +76,27 @@
           <td class="px-4 py-2">{{ m.date }}</td>
 
           <td class="px-4 py-2 text-center space-x-2">
-            <button (click)="openDetail(m)" class="bg-blue-600 text-white px-2 py-1 rounded">Ver</button>
-            <button (click)="openEdit(m)" class="bg-yellow-500 text-white px-2 py-1 rounded">Editar</button>
-            <button (click)="delete(m.id)" class="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
+            <button (click)="openDetail(m)" class="bg-blue-600 text-white px-2 py-1 rounded">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button (click)="openEdit(m)" class="bg-yellow-500 text-white px-2 py-1 rounded">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button (click)="delete(m.id)" class="bg-red-500 text-white px-2 py-1 rounded">
+              <i class="fas fa-trash"></i>
+            </button>
           </td>
 
+        </tr>
+        <tr *ngIf="filtered.length === 0">
+          <td colspan="6" class="text-center py-6 text-gray-500">
+
+            <div class="flex flex-col items-center gap-2">
+              <i class="fa-solid fa-wrench text-3xl text-gray-300"></i>
+              <p>No hay tareas</p>
+            </div>
+
+          </td>
         </tr>
       </tbody>
 

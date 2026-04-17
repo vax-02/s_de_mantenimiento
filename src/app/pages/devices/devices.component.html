@@ -6,10 +6,11 @@
       Gestión de Equipos
     </h1>
 
-    <button (click)="openCreate()"
-      class="bg-gray-800 text-white px-4 py-2 rounded-lg">
-      + Nuevo Equipo
+    <button (click)="openCreate()" class="bg-gray-800 text-white px-4 py-2 rounded-lg">
+      <i class="fas fa-plus"></i> Nuevo Equipo
     </button>
+
+
   </div>
 
   <!-- 📊 CARDS -->
@@ -32,11 +33,17 @@
 
   </div>
 
-  <!-- 🔍 BUSCADOR -->
-  <input [(ngModel)]="search" (input)="filter()"
-    placeholder="Buscar equipo..."
-    class="mb-4 px-3 py-2 border rounded w-1/3">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
 
+    <!-- BUSCADOR -->
+    <div class="relative w-full md:w-1/3">
+      <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+
+      <input [(ngModel)]="search" (input)="filter()" placeholder="Buscar equipo..."
+        class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800">
+    </div>
+
+  </div>
   <!-- 📋 TABLA -->
   <div class="bg-white rounded shadow border overflow-hidden">
 
@@ -48,7 +55,10 @@
           <th class="px-4 py-3">Tipo</th>
           <th class="px-4 py-3">Marca</th>
           <th class="px-4 py-3">Modelo</th>
-          <th class="px-4 py-3">Ubicación</th>
+          <th class="px-4 py-3">Asignado a</th>
+
+          <th class="px-4 py-3">Estado</th>
+
           <th class="px-4 py-3 text-center">Acciones</th>
         </tr>
       </thead>
@@ -60,27 +70,53 @@
           <td class="px-4 py-2">{{ e.type }}</td>
           <td class="px-4 py-2">{{ e.brand }}</td>
           <td class="px-4 py-2">{{ e.model }}</td>
-          <td class="px-4 py-2">{{ e.location }}</td>
+          <td class="px-4 py-2">
+            <span *ngIf="getCurrentUser(e); else libre" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+
+              {{ getCurrentUser(e) }}
+            </span>
+
+            <ng-template #libre>
+              <span class="text-xs text-gray-400">Sin asignación</span>
+            </ng-template>
+          </td>
+          <td class="px-4 py-2">{{ e.status }}</td>
 
           <td class="px-4 py-2 text-center space-x-2">
 
-            <button (click)="openDetail(e)"
-              class="bg-blue-600 text-white px-2 py-1 rounded">
-              Ver
+            <button (click)="openDetail(e)" class="bg-blue-600 text-white px-2 py-1 rounded">
+              <i class="fas fa-eye"></i>
             </button>
 
-            <button (click)="openEdit(e)"
-              class="bg-yellow-500 text-white px-2 py-1 rounded">
-              Editar
+            <button (click)="openAssignModal(e)"
+              class="mx-1 bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600">
+
+              <i class="fa-solid fa-user-plus"></i>
+            </button>
+            <button (click)="openHistory(e)" class="mx-1 bg-gray-600 text-white px-3 py-1 rounded">
+
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </button>
+            <button (click)="openEdit(e)" class="bg-yellow-500 text-white px-2 py-1 rounded">
+              <i class="fas fa-edit"> </i>
             </button>
 
-            <button (click)="delete(e.id)"
-              class="bg-red-500 text-white px-2 py-1 rounded">
-              Eliminar
+            <button (click)="delete(e.id)" class="bg-red-500 text-white px-2 py-1 rounded">
+              <i class="fas fa-trash"></i>
             </button>
 
           </td>
 
+        </tr>
+        <tr *ngIf="filtered.length === 0">
+          <td colspan="8" class="text-center py-6 text-gray-500">
+
+            <div class="flex flex-col items-center gap-2">
+              <i class="fa-solid fa-laptop text-3xl text-gray-300"></i>
+              <p>No hay equipos registrados</p>
+            </div>
+
+          </td>
         </tr>
       </tbody>
 
@@ -108,7 +144,8 @@
         <input [(ngModel)]="newEquipment.brand" name="brand" placeholder="Marca" class="w-full border p-2 rounded">
         <input [(ngModel)]="newEquipment.model" name="model" placeholder="Modelo" class="w-full border p-2 rounded">
         <input [(ngModel)]="newEquipment.serial" name="serial" placeholder="Serie" class="w-full border p-2 rounded">
-        <input [(ngModel)]="newEquipment.location" name="location" placeholder="Ubicación" class="w-full border p-2 rounded">
+        <textarea [(ngModel)]="newEquipment.detail" name="detail" placeholder="Detalle"
+          class="w-full border p-2 rounded"></textarea>
 
         <div class="flex justify-end gap-2">
           <button type="button" (click)="showModal=false" class="border px-3 py-1 rounded">Cancelar</button>
@@ -122,23 +159,94 @@
   </div>
 
   <!-- 👁 MODAL DETALLE -->
-  <div *ngIf="showDetail" class="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
+  <div *ngIf="showDetail" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
 
-    <div class="bg-white p-6 rounded w-full max-w-md">
+    <div class="bg-white p-6 rounded-2xl w-full max-w-2xl shadow-xl">
 
-      <h2 class="text-lg font-semibold mb-4">Detalle del Equipo</h2>
+      <h2 class="text-xl font-bold mb-4">Detalle del Equipo</h2>
 
-      <div *ngIf="selectedEquipment" class="space-y-2 text-sm">
-        <p><b>Código:</b> {{ selectedEquipment.code }}</p>
-        <p><b>Tipo:</b> {{ selectedEquipment.type }}</p>
-        <p><b>Marca:</b> {{ selectedEquipment.brand }}</p>
-        <p><b>Modelo:</b> {{ selectedEquipment.model }}</p>
-        <p><b>Serie:</b> {{ selectedEquipment.serial }}</p>
-        <p><b>Ubicación:</b> {{ selectedEquipment.location }}</p>
+      <div *ngIf="selectedEquipment as eq" class="space-y-4 text-sm">
+
+        <!-- INFO -->
+        <div class="grid grid-cols-2 gap-3">
+          <p><b>Código:</b> {{ eq.code }}</p>
+          <p><b>Tipo:</b> {{ eq.type }}</p>
+          <p><b>Marca:</b> {{ eq.brand }}</p>
+          <p><b>Modelo:</b> {{ eq.model }}</p>
+          <p><b>Serie:</b> {{ eq.serial }}</p>
+        </div>
+
+        <p><b>Detalle:</b> {{ eq.detail }}</p>
+
+        <!-- 🔄 CAMBIO DE ESTADO -->
+        <div class="flex items-center gap-3 mt-3">
+
+          <label class="font-semibold">Estado:</label>
+
+          <select [(ngModel)]="eq.status" (change)="updateStatus(eq)" class="border rounded-lg px-3 py-1">
+
+            <option>Sin asignación</option>
+            <option>Asignado</option>
+            <option>En mantenimiento</option>
+            <option>Dado de baja</option>
+          </select>
+
+        </div>
+
+        <!-- 🧵 TIMELINE -->
+        <div class="mt-6">
+
+          <h3 class="font-semibold mb-3">Historial de mantenimiento</h3>
+
+          <div *ngIf="eq.history.length > 0; else noHistory"
+            class="relative border-l-2 border-gray-300 pl-5 space-y-5 max-h-64 overflow-y-auto">
+
+            <div *ngFor="let h of eq.history; let i = index" class="relative">
+
+              <!-- punto -->
+              <div class="absolute -left-[10px] top-1 w-4 h-4 bg-gray-900 rounded-full"></div>
+
+              <!-- card -->
+              <div class="bg-gray-50 p-3 rounded-lg shadow-sm">
+
+                <p class="font-semibold text-gray-800">
+                  {{ h.detail }}
+                </p>
+
+                <p class="text-xs text-gray-500">
+                  {{ h.reportedAt }} • {{ h.reportedBy }}
+                </p>
+
+                <!-- BOTÓN VER MÁS -->
+                <button (click)="toggleDetail(i)" class="text-xs text-blue-600 mt-1 hover:underline">
+
+                  {{ expandedIndex === i ? 'Ocultar' : 'Ver más' }}
+                </button>
+
+                <!-- DETALLE COMPLETO -->
+                <div *ngIf="expandedIndex === i" class="mt-2 text-xs text-gray-600 space-y-1">
+                  <p><b>Reparado por:</b> {{ h.fixedBy }}</p>
+                  <p><b>Fecha reparación:</b> {{ h.fixedAt }}</p>
+                  <p><b>Detalle completo:</b> {{ h.detail }}</p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <ng-template #noHistory>
+            <p class="text-gray-400 text-sm">Sin historial</p>
+          </ng-template>
+
+        </div>
+
       </div>
 
-      <div class="flex justify-end mt-4">
-        <button (click)="showDetail=false" class="bg-gray-800 text-white px-4 py-2 rounded">
+      <!-- FOOTER -->
+      <div class="flex justify-end mt-6">
+        <button (click)="showDetail=false" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800">
           Cerrar
         </button>
       </div>
@@ -146,5 +254,106 @@
     </div>
 
   </div>
+  <div *ngIf="showAssignModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
 
+    <div class="bg-white p-6 rounded-xl w-full max-w-md">
+
+      <h2 class="text-lg font-bold mb-4">Asignar Equipo</h2>
+
+      <div *ngIf="selectedEquipment as eq">
+
+        <!-- USUARIO ACTUAL -->
+        <p class="text-sm mb-2">
+          <b>Actual:</b> {{ getCurrentUser(eq) || 'Nadie' }}
+        </p>
+
+        <!-- NUEVO USUARIO -->
+        <input [(ngModel)]="newAssignedUser" placeholder="Nombre del usuario"
+          class="w-full border px-3 py-2 rounded mb-4">
+
+        <!-- BOTONES -->
+        <div class="flex justify-end gap-2">
+          <button (click)="showAssignModal=false" class="px-4 py-2 border rounded">
+            Cancelar
+          </button>
+
+          <button (click)="assignUser()" class="bg-gray-900 text-white px-4 py-2 rounded">
+            Guardar
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div *ngIf="showHistoryModal"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+
+    <div class="bg-white p-6 rounded-2xl w-full max-w-xl shadow-xl">
+
+      <h2 class="text-xl font-bold mb-4">
+        Historial de Asignaciones
+      </h2>
+
+      <div *ngIf="historyEquipment as eq">
+
+        <!-- TIMELINE -->
+        <div *ngIf="eq.assignments.length > 0; else noHistory"
+          class="relative border-l-2 border-gray-300 pl-5 space-y-5 max-h-80 overflow-y-auto">
+
+          <div *ngFor="let a of eq.assignments" class="relative">
+
+            <!-- punto -->
+            <div class="absolute -left-[10px] top-1 w-4 h-4 bg-indigo-600 rounded-full"></div>
+
+            <!-- card -->
+            <div class="bg-gray-50 p-3 rounded-lg shadow-sm">
+
+              <p class="font-semibold text-gray-800">
+                {{ a.user }}
+              </p>
+
+              <p class="text-xs text-gray-500">
+                <b>Inicio:</b> {{ formatDate(a.start) }}
+              </p>
+
+              <p class="text-xs text-gray-500">
+                <b>Fin:</b>
+                <span *ngIf="a.end; else activo">
+                  {{ formatDate(a.end) }}
+                </span>
+
+                <ng-template #activo>
+                  <span class="text-green-600 font-semibold">
+                    En uso actualmente
+                  </span>
+                </ng-template>
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- VACÍO -->
+        <ng-template #noHistory>
+          <p class="text-gray-400 text-sm">
+            No hay historial de asignaciones
+          </p>
+        </ng-template>
+
+      </div>
+
+      <!-- BOTÓN -->
+      <div class="flex justify-end mt-6">
+        <button (click)="closeHistory()" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+
+  </div>
 </div>

@@ -6,6 +6,7 @@ import { MaintenancesComponent } from './pages/maintenances/maintenances.compone
 import { IncidentsComponent } from './pages/incidents/incidents.component';
 import { ReportsComponent } from './pages/reports/reports.component';
 import { SidebarLayoutComponent } from './layout/sidebar-layout/sidebar-layout.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
     { path: 'maintenances', component: MaintenancesComponent },
     { path: 'incidents', component: IncidentsComponent },
     { path: 'reports', component: ReportsComponent },
+    { path: 'profile', component: ProfileComponent },
 
   ]},
 

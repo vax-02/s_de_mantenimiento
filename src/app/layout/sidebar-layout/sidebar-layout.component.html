@@ -1,28 +1,24 @@
 <div class="flex h-screen overflow-hidden bg-gray-100">
 
   <!-- OVERLAY MOBILE -->
-  <div *ngIf="isMobileOpen"
-    (click)="toggleMobile()"
-    class="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden">
+  <div *ngIf="isMobileOpen" (click)="toggleMobile()" class="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden">
   </div>
 
   <!-- SIDEBAR -->
   <aside
-    class="fixed lg:relative h-full bg-gray-900 text-white flex flex-col transition-all duration-300 z-30 lg:translate-x-0"
-    [class.w-64]="!isCollapsed"
-    [class.w-20]="isCollapsed"
-    [class.-translate-x-full]="!isMobileOpen"
+    class="fixed  lg:relative h-full bg-gray-900 text-white flex flex-col transition-all duration-300 z-30 lg:translate-x-0"
+    [class.w-64]="!isCollapsed" [class.w-20]="isCollapsed" [class.-translate-x-full]="!isMobileOpen"
     [class.translate-x-0]="isMobileOpen">
 
     <!-- HEADER -->
-    <div class="flex items-center justify-between p-4 border-b border-gray-700">
+    <div class="flex  items-center justify-between p-4 border-b border-gray-700" >
 
       <span *ngIf="!isCollapsed" class="font-bold text-lg">
         Sistema TI
       </span>
 
-      <button (click)="toggleSidebar()" class="text-white text-lg">
-        ☰
+      <button (click)="toggleSidebar()" class="text-white text-lg" >
+        <i class="fa-solid fa-bars"></i>
       </button>
 
     </div>
@@ -30,48 +26,80 @@
     <!-- MENU -->
     <nav class="flex-1 p-2 space-y-2">
 
-      <a routerLink="users" routerLinkActive="bg-gray-700"
-        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
-        title="Usuarios">
+      <a routerLink="reports" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
 
-        <span>👤</span>
+        <span><i class="fa-solid fa-chart-bar text-white text-center"></i></span>
+        <span *ngIf="!isCollapsed">Panel de control</span>
+      </a>
+
+      <a routerLink="users" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Usuarios">
+
+        <span><i class="fa-solid fa-user text-white"></i></span>
         <span *ngIf="!isCollapsed">Usuarios</span>
       </a>
 
       <a routerLink="devices" routerLinkActive="bg-gray-700"
-        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
-        title="Equipos">
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Equipos">
 
-        <span>💻</span>
+        <span><i class="fa-solid fa-laptop text-white"></i></span>
         <span *ngIf="!isCollapsed">Equipos</span>
       </a>
 
       <a routerLink="maintenances" routerLinkActive="bg-gray-700"
-        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
-        title="Mantenimientos">
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Mantenimientos">
 
-        <span>🛠</span>
+        <span><i class="fa-solid fa-wrench text-white"></i></span>
         <span *ngIf="!isCollapsed">Mantenimientos</span>
       </a>
 
       <a routerLink="incidents" routerLinkActive="bg-gray-700"
-        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
-        title="Incidencias">
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Incidencias">
 
-        <span>⚠</span>
+        <span><i class="fa-solid fa-exclamation-triangle text-white"></i></span>
         <span *ngIf="!isCollapsed">Incidencias</span>
       </a>
 
-      <a routerLink="reports" routerLinkActive="bg-gray-700"
-        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
-        title="Reportes">
-
-        <span>📊</span>
-        <span *ngIf="!isCollapsed">Reportes</span>
-      </a>
 
     </nav>
 
+
+    <!-- USER FOOTER -->
+    <div class="mt-auto p-3 border-t border-gray-700 ">
+
+      <div class="flex items-center justify-between">
+
+        <!-- INFO USUARIO -->
+        <a routerLink="profile" title="perfil" class="min-w-[80%]">
+
+          <div class="flex items-center gap-3   p-1 rounded hover:bg-gray-700 transition cursor-pointer">
+
+            <!-- FOTO -->
+            <img src="https://i.pravatar.cc/40" alt="user" class="w-10 h-10 rounded-full object-cover">
+
+            <!-- NOMBRE -->
+            <div *ngIf="!isCollapsed">
+              <p class="text-sm font-semibold">Javier</p>
+              <p class="text-xs text-gray-400">Admin</p>
+            </div>
+
+          </div>
+        </a>
+        <!-- LOGOUT -->
+        <button class="text-gray-300 hover:text-red-400 transition" title="Cerrar sesión">
+
+          <i class="fa-solid fa-right-from-bracket text-lg"></i>
+        </button>
+
+      </div>
+
+    </div>
   </aside>
 
   <!-- CONTENIDO -->
@@ -82,11 +110,12 @@
 
       <!-- BOTÓN MOBILE -->
       <button (click)="toggleMobile()" class="lg:hidden text-lg">
-        ☰
+        <i class="fa-solid fa-bars"></i>
+
       </button>
 
       <span class="font-semibold text-gray-700">
-        Panel Administrativo
+        ---
       </span>
 
     </header>
@@ -97,5 +126,6 @@
     </main>
 
   </div>
+
 
 </div>
