@@ -1,0 +1,75 @@
+<div class="p-6 bg-gray-100 min-h-screen">
+
+  <!-- HEADER -->
+  <h1 class="text-2xl font-semibold mb-6 text-gray-800">
+    Dashboard de Reportes
+  </h1>
+
+  <!-- 📊 CARDS -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+
+    <div class="bg-white p-4 rounded shadow border">
+      <p class="text-sm text-gray-500">Mantenimientos</p>
+      <h3 class="text-xl font-bold">{{ totalMaintenances }}</h3>
+    </div>
+
+    <div class="bg-white p-4 rounded shadow border">
+      <p class="text-sm text-gray-500">Incidencias Abiertas</p>
+      <h3 class="text-xl font-bold text-red-600">{{ abiertas }}</h3>
+    </div>
+
+    <div class="bg-white p-4 rounded shadow border">
+      <p class="text-sm text-gray-500">Críticas</p>
+      <h3 class="text-xl font-bold text-yellow-600">{{ criticas }}</h3>
+    </div>
+
+  </div>
+
+  <!-- 🔎 FILTROS -->
+  <div class="bg-white p-4 rounded shadow mb-6 flex gap-4">
+
+    <input type="date" [(ngModel)]="filter.date"
+      class="border px-2 py-1 rounded">
+
+    <select [(ngModel)]="filter.technician"
+      class="border px-2 py-1 rounded">
+      <option value="">Técnico</option>
+      <option *ngFor="let t of technicians">{{ t }}</option>
+    </select>
+
+    <select [(ngModel)]="filter.type"
+      class="border px-2 py-1 rounded">
+      <option value="">Tipo</option>
+      <option *ngFor="let t of types">{{ t }}</option>
+    </select>
+
+  </div>
+
+  <!-- 📊 GRÁFICAS -->
+  <div class="grid grid-cols-2 gap-6">
+
+    <!-- MANTENIMIENTOS -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-3">
+        Mantenimientos
+      </h2>
+
+      <canvas baseChart
+        chartType="pie">
+      </canvas>
+    </div>
+
+    <!-- INCIDENCIAS -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-3">
+        Incidencias
+      </h2>
+
+      <canvas baseChart
+        chartType="doughnut">
+      </canvas>
+    </div>
+
+  </div>
+
+</div>

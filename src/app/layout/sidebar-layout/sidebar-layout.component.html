@@ -1,0 +1,101 @@
+<div class="flex h-screen overflow-hidden bg-gray-100">
+
+  <!-- OVERLAY MOBILE -->
+  <div *ngIf="isMobileOpen"
+    (click)="toggleMobile()"
+    class="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden">
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside
+    class="fixed lg:relative h-full bg-gray-900 text-white flex flex-col transition-all duration-300 z-30 lg:translate-x-0"
+    [class.w-64]="!isCollapsed"
+    [class.w-20]="isCollapsed"
+    [class.-translate-x-full]="!isMobileOpen"
+    [class.translate-x-0]="isMobileOpen">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-700">
+
+      <span *ngIf="!isCollapsed" class="font-bold text-lg">
+        Sistema TI
+      </span>
+
+      <button (click)="toggleSidebar()" class="text-white text-lg">
+        ☰
+      </button>
+
+    </div>
+
+    <!-- MENU -->
+    <nav class="flex-1 p-2 space-y-2">
+
+      <a routerLink="users" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
+        title="Usuarios">
+
+        <span>👤</span>
+        <span *ngIf="!isCollapsed">Usuarios</span>
+      </a>
+
+      <a routerLink="devices" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
+        title="Equipos">
+
+        <span>💻</span>
+        <span *ngIf="!isCollapsed">Equipos</span>
+      </a>
+
+      <a routerLink="maintenances" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
+        title="Mantenimientos">
+
+        <span>🛠</span>
+        <span *ngIf="!isCollapsed">Mantenimientos</span>
+      </a>
+
+      <a routerLink="incidents" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
+        title="Incidencias">
+
+        <span>⚠</span>
+        <span *ngIf="!isCollapsed">Incidencias</span>
+      </a>
+
+      <a routerLink="reports" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700"
+        title="Reportes">
+
+        <span>📊</span>
+        <span *ngIf="!isCollapsed">Reportes</span>
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- CONTENIDO -->
+  <div class="flex-1 flex flex-col w-full">
+
+    <!-- TOPBAR -->
+    <header class="bg-white shadow p-3 flex justify-between items-center">
+
+      <!-- BOTÓN MOBILE -->
+      <button (click)="toggleMobile()" class="lg:hidden text-lg">
+        ☰
+      </button>
+
+      <span class="font-semibold text-gray-700">
+        Panel Administrativo
+      </span>
+
+    </header>
+
+    <!-- CONTENIDO DINÁMICO -->
+    <main class="flex-1 overflow-y-auto p-4 bg-gray-100">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>
