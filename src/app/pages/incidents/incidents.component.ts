@@ -47,7 +47,13 @@ export class IncidentsComponent {
   selected: Incident | null = null;
 
   // 📌 FORM
-  newIncident: Incident = this.reset();
+  //newIncident: Incident = this.reset();
+
+  newIncident: any = {
+    title: '',
+    description: '',
+    device: null,
+  };
   newComment = '';
   selectedFiles: File[] = [];
 
@@ -192,5 +198,29 @@ export class IncidentsComponent {
 
   get cerradas() {
     return this.incidents.filter((i) => i.status === 'Cerrada').length;
+  }
+  searchDevice = '';
+
+  devices = [
+    { id: 1, code: 'EQ-001', brand: 'Dell', model: 'Optiplex' },
+    { id: 2, code: 'EQ-002', brand: 'HP', model: 'ProDesk' },
+    { id: 3, code: 'EQ-003', brand: 'Lenovo', model: 'ThinkCentre' },
+  ];
+  filteredDevices() {
+    if (!this.searchDevice) return this.devices;
+
+    return this.devices.filter(
+      (d) =>
+        d.code.toLowerCase().includes(this.searchDevice.toLowerCase()) ||
+        d.brand.toLowerCase().includes(this.searchDevice.toLowerCase()) ||
+        d.model.toLowerCase().includes(this.searchDevice.toLowerCase()),
+    );
+  }
+  selectDevice(device: any) {
+    this.newIncident.device = device;
+    this.searchDevice = '';
+  }
+  closeChat(){
+    this.showDetail = false;
   }
 }

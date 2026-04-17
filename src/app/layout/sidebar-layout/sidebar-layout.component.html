@@ -11,13 +11,13 @@
     [class.translate-x-0]="isMobileOpen">
 
     <!-- HEADER -->
-    <div class="flex  items-center justify-between p-4 border-b border-gray-700" >
+    <div class="flex  items-center justify-between p-4 border-b border-gray-700">
 
       <span *ngIf="!isCollapsed" class="font-bold text-lg">
         Sistema TI
       </span>
 
-      <button (click)="toggleSidebar()" class="text-white text-lg" >
+      <button (click)="toggleSidebar()" class="text-white text-lg">
         <i class="fa-solid fa-bars"></i>
       </button>
 
@@ -33,6 +33,26 @@
         <span><i class="fa-solid fa-chart-bar text-white text-center"></i></span>
         <span *ngIf="!isCollapsed">Panel de control</span>
       </a>
+
+
+      <a routerLink="mydevices" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
+
+        <span><i class="fa-solid fa-laptop text-white text-center"></i></span>
+        <span *ngIf="!isCollapsed">Mis equipos - U</span>
+      </a>
+
+
+
+      <a routerLink="tasks" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
+
+        <span><i class="fa-solid fa-check text-white text-center"></i></span>
+        <span *ngIf="!isCollapsed">Mis tareas - T</span>
+      </a>
+
 
       <a routerLink="users" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
@@ -62,8 +82,8 @@
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Incidencias">
 
-        <span><i class="fa-solid fa-exclamation-triangle text-white"></i></span>
-        <span *ngIf="!isCollapsed">Incidencias</span>
+        <span><i class="fa-solid fa-ticket text-white"></i></span>
+        <span *ngIf="!isCollapsed">Tickets</span>
       </a>
 
 
@@ -92,7 +112,7 @@
           </div>
         </a>
         <!-- LOGOUT -->
-        <button class="text-gray-300 hover:text-red-400 transition" title="Cerrar sesión">
+        <button (click)="loggout()" class="text-gray-300 hover:text-red-400 transition" title="Cerrar sesión">
 
           <i class="fa-solid fa-right-from-bracket text-lg"></i>
         </button>
@@ -115,7 +135,7 @@
       </button>
 
       <span class="font-semibold text-gray-700">
-        ---
+        Panel de control
       </span>
 
     </header>

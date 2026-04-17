@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-sidebar-layout',
@@ -11,6 +12,7 @@ export class SidebarLayoutComponent {
 
   isCollapsed = false;
   isMobileOpen = false;
+  constructor(private router: Router) {}
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
@@ -18,5 +20,9 @@ export class SidebarLayoutComponent {
 
   toggleMobile() {
     this.isMobileOpen = !this.isMobileOpen;
+  }
+  loggout() {
+    localStorage.removeItem('auth');
+    this.router.navigate(['/login']);
   }
 }

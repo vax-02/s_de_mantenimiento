@@ -5,11 +5,10 @@
     Dashboard de Reportes
   </h1>
 
-  <!-- 📊 CARDS -->
-  <div class="grid grid-cols-3 gap-4 mb-6">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 
     <div class="bg-white p-4 rounded shadow border">
-      <p class="text-sm text-gray-500">Mantenimientos</p>
+      <p class="text-sm text-gray-500">Total Mantenimientos</p>
       <h3 class="text-xl font-bold">{{ totalMaintenances }}</h3>
     </div>
 
@@ -23,22 +22,23 @@
       <h3 class="text-xl font-bold text-yellow-600">{{ criticas }}</h3>
     </div>
 
-  </div>
+    <div class="bg-white p-4 rounded shadow border">
+      <p class="text-sm text-gray-500">Resueltas</p>
+      <h3 class="text-xl font-bold text-green-600">0</h3>
+    </div>
 
+  </div>
   <!-- 🔎 FILTROS -->
   <div class="bg-white p-4 rounded shadow mb-6 flex gap-4">
 
-    <input type="date" [(ngModel)]="filter.date"
-      class="border px-2 py-1 rounded">
+    <input type="date" [(ngModel)]="filter.date" class="border px-2 py-1 rounded">
 
-    <select [(ngModel)]="filter.technician"
-      class="border px-2 py-1 rounded">
+    <select [(ngModel)]="filter.technician" class="border px-2 py-1 rounded">
       <option value="">Técnico</option>
       <option *ngFor="let t of technicians">{{ t }}</option>
     </select>
 
-    <select [(ngModel)]="filter.type"
-      class="border px-2 py-1 rounded">
+    <select [(ngModel)]="filter.type" class="border px-2 py-1 rounded">
       <option value="">Tipo</option>
       <option *ngFor="let t of types">{{ t }}</option>
     </select>
@@ -54,8 +54,7 @@
         Mantenimientos
       </h2>
 
-      <canvas baseChart
-        chartType="pie">
+      <canvas baseChart chartType="pie">
       </canvas>
     </div>
 
@@ -65,11 +64,35 @@
         Incidencias
       </h2>
 
-      <canvas baseChart
-        chartType="doughnut">
+      <canvas baseChart chartType="doughnut">
       </canvas>
     </div>
 
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-3">Estado de Tickets</h2>
+
+      <canvas baseChart [data]="statusChartData" [type]="'doughnut'">
+      </canvas>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-3">Equipos con más Reparaciones</h2>
+
+      <canvas baseChart [data]="equipmentChartData" [type]="'bar'">
+      </canvas>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-3">Tipos de Fallas</h2>
+
+      <canvas baseChart [data]="failureTypeChartData" [type]="'pie'">
+      </canvas>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-3">Reparaciones por Mes</h2>
+
+      <canvas baseChart [data]="trendChartData" [type]="'line'">
+      </canvas>
+    </div>
+    
   </div>
 
 </div>

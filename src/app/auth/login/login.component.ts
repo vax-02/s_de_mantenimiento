@@ -20,7 +20,8 @@ export class LoginComponent {
       // Simulación de login
       localStorage.setItem('auth', 'true');
 
-      this.router.navigate(['/dashboard']); // cambia según tu ruta
+      console.log(localStorage.getItem('auth')); // Verifica que el valor se haya guardado
+      this.router.navigate(['/home/reports']); // cambia según tu ruta
     }
   }
 
