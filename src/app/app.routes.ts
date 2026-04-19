@@ -9,6 +9,7 @@ import { SidebarLayoutComponent } from './layout/sidebar-layout/sidebar-layout.c
 import { ProfileComponent } from './pages/profile/profile.component';
 import { MydevicesComponent } from './pages/user/mydevices/mydevices.component';
 import { TasksComponent } from './pages/technical/tasks/tasks.component';
+import { HistoryComponent } from './pages/technical/history/history.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,6 +17,8 @@ export const routes: Routes = [
     { path: 'users', component: UsersComponent },
     { path: 'mydevices', component: MydevicesComponent }, //usuario
     { path: 'tasks', component: TasksComponent }, //tecnico
+    { path: 'history', component: HistoryComponent }, //tecnico
+
 
 
     { path: 'devices', component: DevicesComponent },

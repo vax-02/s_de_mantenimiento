@@ -37,7 +37,7 @@
 
       <a routerLink="mydevices" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
-        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Mis equipos">
 
         <span><i class="fa-solid fa-laptop text-white text-center"></i></span>
         <span *ngIf="!isCollapsed">Mis equipos - U</span>
@@ -47,12 +47,20 @@
 
       <a routerLink="tasks" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
-        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Tareas">
 
         <span><i class="fa-solid fa-check text-white text-center"></i></span>
         <span *ngIf="!isCollapsed">Mis tareas - T</span>
       </a>
 
+      
+      <a routerLink="history" routerLinkActive="bg-gray-700"
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+        [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
+
+        <span><i class="fa-solid fa-history text-white text-center"></i></span>
+        <span *ngIf="!isCollapsed">Historial de tareas - T</span>
+      </a>
 
       <a routerLink="users" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
