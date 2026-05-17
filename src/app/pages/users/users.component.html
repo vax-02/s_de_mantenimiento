@@ -6,8 +6,9 @@
       Gestión de Usuarios
     </h1>
 
-    <button (click)="showModal = true" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
-      + Agregar Usuario
+    <button (click)="showModal = true; resetForm(); editingIndex = null"
+      class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
+      <i class="fa-solid fa-plus"></i> Agregar Usuario
     </button>
   </div>
 
@@ -57,23 +58,23 @@
 
           <td class="px-4 py-2">{{ user.name }}</td>
           <td class="px-4 py-2">{{ user.email }}</td>
-          <td class="px-4 py-2">{{ user.role }}</td>
+          <td class="px-4 py-2">{{ getRolLabel(user.rol) }}</td>
 
           <td class="px-4 py-2">
             <span class="px-2 py-1 rounded text-xs" [ngClass]="{
-                'bg-green-100 text-green-700': user.status === 'Activo',
-                'bg-red-100 text-red-700': user.status === 'Bloqueado'
+                'bg-green-100 text-green-700': user.status === 1,
+                'bg-red-100 text-red-700': user.status === 0
               }">
-              {{ user.status }}
+              {{ user.status === 1 ? 'Activo' : 'Bloqueado' }}
             </span>
           </td>
 
           <td class="px-4 py-2 text-center">
 
             <!-- BLOQUEAR / DESBLOQUEAR -->
-            <button (click)="toggleStatus(i)" class="mx-1 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+            <button (click)="toggleStatus(i)" [ngClass]="user.status==0? 'bg-red-500':''" class="mx-1 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
 
-              <i class="fa-solid" [ngClass]="user.status === 'Activo' ? 'fa-lock' : 'fa-lock-open'"></i>
+              <i class="fa-solid" [ngClass]="user.status === 0 ? 'fa-lock' : 'fa-lock-open'"></i>
             </button>
 
             <!-- EDITAR -->
@@ -109,33 +110,48 @@
   <!-- 🧩 MODAL -->
   <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
 
-    <div class="bg-white p-6 rounded-xl w-full max-w-md shadow-lg">
+    <div class=" p-6 rounded-xl w-full max-w-md shadow-lg bg-white">
 
-      <h2 class="text-lg font-semibold mb-4">Nuevo Usuario</h2>
+      <h2 class="text-lg font-semibold mb-4">Formulario de Usuario</h2>
 
       <form (ngSubmit)="addUser()" class="space-y-3">
 
-        <input [(ngModel)]="newUser.name" name="name" placeholder="Nombre" class="w-full border px-3 py-2 rounded">
+        <div>
+          <input [(ngModel)]="newUser.name" name="name" placeholder="Nombre" class="w-full border px-3 py-2 rounded"
+            [class.border-red-500]="formSubmitted && validationErrors['name']">
+          <p *ngIf="formSubmitted && validationErrors['name']" class="text-red-500 text-xs mt-1">
+            {{ validationErrors['name'] }}</p>
+        </div>
 
-        <input [(ngModel)]="newUser.email" name="email" placeholder="Correo" class="w-full border px-3 py-2 rounded">
+        <div>
+          <input [(ngModel)]="newUser.email" name="email" placeholder="Correo" class="w-full border px-3 py-2 rounded"
+            [class.border-red-500]="formSubmitted && validationErrors['email']">
+          <p *ngIf="formSubmitted && validationErrors['email']" class="text-red-500 text-xs mt-1">
+            {{ validationErrors['email'] }}</p>
+        </div>
 
-        <select [(ngModel)]="newUser.role" name="role" class="w-full border px-3 py-2 rounded">
-
-          <option value="">Rol</option>
-          <option *ngFor="let r of roles">{{ r }}</option>
-
-        </select>
+        <div>
+          <select [(ngModel)]="newUser.rol" name="rol" class="w-full border px-3 py-2 rounded"
+            [class.border-red-500]="formSubmitted && validationErrors['rol']">
+            <option value="" disabled selected>Elija un rol</option>
+            <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
+          </select>
+          <p *ngIf="formSubmitted && validationErrors['rol']" class="text-red-500 text-xs mt-1">
+            {{ validationErrors['rol'] }}</p>
+        </div>
 
         <div class="flex justify-end gap-2 pt-2">
-
-          <button type="button" (click)="showModal = false" class="px-4 py-2 border rounded">
+          <button type="button" (click)="showModal = false; resetForm()" class="px-4 py-2 border rounded">
             Cancelar
           </button>
-
-          <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded">
+          <button type="submit" [disabled]="loading" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">
+            @if(loading){
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Guardando...
+            } @else {
             Guardar
+            }
           </button>
-
         </div>
 
       </form>

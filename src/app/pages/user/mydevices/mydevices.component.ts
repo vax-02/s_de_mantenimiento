@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DeviceService } from '../../../core/services/device.service';
 @Component({
   selector: 'app-mydevices',
   imports: [CommonModule, FormsModule],
@@ -8,24 +9,21 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './mydevices.component.css',
 })
 export class MydevicesComponent {
-  devices = [
-    {
-      id: 1,
-      name: 'PC Oficina 01',
-      code: 'PC-001',
-      type: 'PC',
-      status: 'Activo',
-      lastMaintenance: '2026-04-10',
-    },
-    {
-      id: 2,
-      name: 'Laptop Técnico',
-      code: 'LT-002',
-      type: 'Laptop',
-      status: 'Mantenimiento',
-      lastMaintenance: '2026-03-28',
-    },
-  ];
+  constructor(private deviceService: DeviceService) {}
+  devices: {
+    id: number;
+    brand: string;
+    type: string;
+    detail: string;
+    created_at: string;
+    status: number;
+  }[] = [];
+  statuses: { [key: number]: string } = {
+    1: 'Sin asignación',
+    2: 'En uso',
+    3: 'En mantenimiento',
+    4: 'Retirado',
+  };
   selectedDevice: any = null;
 
   maintenanceHistory = [
@@ -33,6 +31,23 @@ export class MydevicesComponent {
     { date: '2026-03-05', description: 'Limpieza interna' },
   ];
 
+  ngOnInit() {
+    this.loadDevices();
+  }
+  loadDevices() {
+    // Aquí podrías cargar los dispositivos asignados al usuario desde el backend
+    const auth = localStorage.getItem('auth');
+    var authData: {id : 0} = {id: 0};
+    if (auth) {
+      authData = JSON.parse(auth);
+    }
+
+    this.deviceService.getMyDevices(authData.id).subscribe((data: any) => {
+      this.devices = data;
+      console.log(data);
+    });
+    console.log('Dispositivos cargados:', this.devices);
+  }
   openDetail(device: any) {
     this.selectedDevice = device;
   }
@@ -49,13 +64,11 @@ export class MydevicesComponent {
 
   chatMessages: any[] = [];
 
-  
   closeChat() {
     this.selectedTicket = null;
   }
 
   newMessage = '';
-
 
   selectedFiles: any[] = [];
 
@@ -105,5 +118,4 @@ export class MydevicesComponent {
   removeFile(index: number) {
     this.selectedFiles.splice(index, 1);
   }
-
 }

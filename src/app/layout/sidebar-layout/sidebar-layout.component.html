@@ -14,7 +14,7 @@
     <div class="flex  items-center justify-between p-4 border-b border-gray-700">
 
       <span *ngIf="!isCollapsed" class="font-bold text-lg">
-        Sistema TI
+        SISTEMA TI
       </span>
 
       <button (click)="toggleSidebar()" class="text-white text-lg">
@@ -53,7 +53,7 @@
         <span *ngIf="!isCollapsed">Mis tareas - T</span>
       </a>
 
-      
+
       <a routerLink="history" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
@@ -109,12 +109,14 @@
           <div class="flex items-center gap-3   p-1 rounded hover:bg-gray-700 transition cursor-pointer">
 
             <!-- FOTO -->
-            <img src="https://i.pravatar.cc/40" alt="user" class="w-10 h-10 rounded-full object-cover">
-
+            <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+              {{ getInitials(authData?.name) }}
+            </div>
             <!-- NOMBRE -->
             <div *ngIf="!isCollapsed">
-              <p class="text-sm font-semibold">Javier</p>
-              <p class="text-xs text-gray-400">Admin</p>
+              <p class="text-sm font-semibold">{{ authData?.name }} </p>
+              <span class="text-xs text-gray-200">{{ authData?.email }}</span>
+              <p class="text-xs text-gray-400">{{ roles[authData.rol] }}</p>
             </div>
 
           </div>

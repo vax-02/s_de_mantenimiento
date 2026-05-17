@@ -1,28 +1,52 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../core/services/user.service';
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  errorMessage: string = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private userService: UserService,
+  ) {}
 
   login() {
-    if (this.email && this.password) {
-      console.log('Login:', this.email);
+    this.errorMessage = '';
 
-      // Simulación de login
-      localStorage.setItem('auth', 'true');
-
-      console.log(localStorage.getItem('auth')); // Verifica que el valor se haya guardado
-      this.router.navigate(['/home/reports']); // cambia según tu ruta
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Debe ingresar correo y contraseña';
+      return;
     }
+
+    this.userService.login(this.email, this.password).subscribe({
+      next: (resp: any) => {
+        localStorage.setItem('auth', JSON.stringify(resp));
+
+        if (resp?.message) {
+          this.errorMessage = resp.message;
+        }
+        this.router.navigate(['/home/reports']);
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+        if (err?.error?.message) {
+          this.errorMessage = err.error.message;
+        } else if (err?.message) {
+          this.errorMessage = err.message;
+        } else {
+          this.errorMessage = 'Error al iniciar sesión';
+        }
+      },
+    });
   }
 
   logout() {

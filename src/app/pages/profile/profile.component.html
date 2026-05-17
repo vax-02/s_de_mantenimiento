@@ -12,10 +12,9 @@
       <!-- AVATAR -->
       <div class="-mt-14 flex items-center gap-6">
 
-        <img
-          [src]="user.image"
-          class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover"
-        >
+        <div class="w-28 h-28 rounded-full bg-blue-600 text-white text-5xl flex items-center justify-center font-semibold border-4 border-white shadow-md object-cover">
+          {{ getInitials(user?.name) }}
+        </div>
 
         <div class="mt-5">
           <h2 class="text-2xl font-bold text-gray-100">
@@ -41,8 +40,7 @@
       <!-- ACCIONES -->
       <div class="flex flex-wrap gap-3">
 
-        <button
-          (click)="openModal()"
+        <button (click)="openModal()"
           class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition shadow">
 
           <i class="fa-solid fa-key"></i>
@@ -56,8 +54,7 @@
 </div>
 
 <!-- MODAL -->
-<div *ngIf="isModalOpen"
-  class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-scale">
 
@@ -72,77 +69,55 @@
 
       <!-- INPUT REUTILIZABLE -->
       <div class="relative group">
-        <input
-          [type]="showCurrent ? 'text' : 'password'"
-          [(ngModel)]="form.current"
-          name="current"
-          placeholder=" "
-          required
-          class="w-full border rounded-xl px-4 pt-5 pb-2 focus:ring-2 focus:ring-gray-900 outline-none">
+        <input [type]="showCurrent ? 'text' : 'password'" [(ngModel)]="form.current" name="current" placeholder=" "
+          required class="w-full border rounded-xl px-4 pt-5 pb-2 focus:ring-2 focus:ring-gray-900 outline-none">
 
         <label class="absolute left-4 top-2 text-xs text-gray-400 group-focus-within:text-gray-900">
           Contraseña actual
         </label>
 
-        <button type="button"
-          (click)="showCurrent = !showCurrent"
-          class="absolute right-3 top-3 text-gray-500">
+        <button type="button" (click)="showCurrent = !showCurrent" class="absolute right-3 top-3 text-gray-500">
 
-          <i class="fa-solid"
-            [ngClass]="showCurrent ? 'fa-eye-slash' : 'fa-eye'"></i>
+          <i class="fa-solid" [ngClass]="showCurrent ? 'fa-eye-slash' : 'fa-eye'"></i>
         </button>
       </div>
 
       <!-- NUEVA -->
       <div class="relative group">
-        <input
-          [type]="showNew ? 'text' : 'password'"
-          [(ngModel)]="form.new"
-          name="new"
-          placeholder=" "
-          required
+        <input [type]="showNew ? 'text' : 'password'" [(ngModel)]="form.new" name="new" placeholder=" " required
           class="w-full border rounded-xl px-4 pt-5 pb-2 focus:ring-2 focus:ring-gray-900 outline-none">
 
         <label class="absolute left-4 top-2 text-xs text-gray-400 group-focus-within:text-gray-900">
           Nueva contraseña
         </label>
 
-        <button type="button"
-          (click)="showNew = !showNew"
-          class="absolute right-3 top-3 text-gray-500">
+        <button type="button" (click)="showNew = !showNew" class="absolute right-3 top-3 text-gray-500">
 
-          <i class="fa-solid"
-            [ngClass]="showNew ? 'fa-eye-slash' : 'fa-eye'"></i>
+          <i class="fa-solid" [ngClass]="showNew ? 'fa-eye-slash' : 'fa-eye'"></i>
         </button>
       </div>
 
       <!-- CONFIRMAR -->
       <div class="relative group">
-        <input
-          [type]="showConfirm ? 'text' : 'password'"
-          [(ngModel)]="form.confirm"
-          name="confirm"
-          placeholder=" "
-          required
-          class="w-full border rounded-xl px-4 pt-5 pb-2 focus:ring-2 focus:ring-gray-900 outline-none">
+        <input [type]="showConfirm ? 'text' : 'password'" [(ngModel)]="form.confirm" name="confirm" placeholder=" "
+          required class="w-full border rounded-xl px-4 pt-5 pb-2 focus:ring-2 focus:ring-gray-900 outline-none">
 
         <label class="absolute left-4 top-2 text-xs text-gray-400 group-focus-within:text-gray-900">
           Confirmar contraseña
         </label>
 
-        <button type="button"
-          (click)="showConfirm = !showConfirm"
-          class="absolute right-3 top-3 text-gray-500">
+        <button type="button" (click)="showConfirm = !showConfirm" class="absolute right-3 top-3 text-gray-500">
 
-          <i class="fa-solid"
-            [ngClass]="showConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
+          <i class="fa-solid" [ngClass]="showConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
         </button>
       </div>
 
       <!-- BOTÓN -->
-      <button
-        class="w-full bg-gray-900 text-white py-2.5 rounded-xl hover:bg-gray-800 transition shadow">
-        Guardar cambios
+      <button [disabled]="isLoading" class="w-full bg-gray-900 text-white py-2.5 rounded-xl hover:bg-gray-800 transition shadow disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+        <span *ngIf="isLoading" class="inline-block animate-spin">
+          <i class="fa-solid fa-spinner"></i>
+        </span>
+        {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
       </button>
 
     </form>
