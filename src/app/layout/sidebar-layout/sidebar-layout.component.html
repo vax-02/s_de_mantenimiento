@@ -26,7 +26,7 @@
     <!-- MENU -->
     <nav class="flex-1 p-2 space-y-2">
 
-      <a routerLink="reports" routerLinkActive="bg-gray-700"
+      <a *ngIf="authData.rol == 1" routerLink="reports" routerLinkActive="bg-gray-700" 
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
 
@@ -40,29 +40,29 @@
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Mis equipos">
 
         <span><i class="fa-solid fa-laptop text-white text-center"></i></span>
-        <span *ngIf="!isCollapsed">Mis equipos - U</span>
+        <span *ngIf="!isCollapsed">Mis equipos</span>
       </a>
 
 
 
-      <a routerLink="tasks" routerLinkActive="bg-gray-700"
+      <a *ngIf="authData.rol < 3" routerLink="tasks" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Tareas">
 
         <span><i class="fa-solid fa-check text-white text-center"></i></span>
-        <span *ngIf="!isCollapsed">Mis tareas - T</span>
+        <span *ngIf="!isCollapsed">Mis tareas</span>
       </a>
 
 
-      <a routerLink="history" routerLinkActive="bg-gray-700"
+      <a *ngIf="authData.rol < 3" routerLink="history" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Reportes">
 
         <span><i class="fa-solid fa-history text-white text-center"></i></span>
-        <span *ngIf="!isCollapsed">Historial de tareas - T</span>
+        <span *ngIf="!isCollapsed">Historial de tareas</span>
       </a>
 
-      <a routerLink="users" routerLinkActive="bg-gray-700"
+      <a *ngIf="authData.rol == 1" routerLink="users" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Usuarios">
 
@@ -70,7 +70,7 @@
         <span *ngIf="!isCollapsed">Usuarios</span>
       </a>
 
-      <a routerLink="devices" routerLinkActive="bg-gray-700"
+      <a *ngIf="authData.rol == 1" routerLink="devices" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Equipos">
 
@@ -78,7 +78,7 @@
         <span *ngIf="!isCollapsed">Equipos</span>
       </a>
 
-      <a routerLink="maintenances" routerLinkActive="bg-gray-700"
+      <a *ngIf="authData.rol == 1" routerLink="maintenances" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Mantenimientos">
 
@@ -86,7 +86,7 @@
         <span *ngIf="!isCollapsed">Mantenimientos</span>
       </a>
 
-      <a routerLink="incidents" routerLinkActive="bg-gray-700"
+      <a *ngIf="authData.rol == 1" routerLink="incidents" routerLinkActive="bg-gray-700"
         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
         [ngClass]="isCollapsed ? 'justify-center' : 'gap-3'" title="Incidencias">
 

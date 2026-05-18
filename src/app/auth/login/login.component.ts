@@ -34,7 +34,14 @@ export class LoginComponent {
         if (resp?.message) {
           this.errorMessage = resp.message;
         }
+        if(resp.rol == 1) {
         this.router.navigate(['/home/reports']);
+        }else if(resp.rol == 2) {
+          this.router.navigate(['/home/tasks']);
+        }else{
+          this.router.navigate(['/home/mydevices']);
+        }
+
       },
       error: (err) => {
         console.error('Login failed:', err);
