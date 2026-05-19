@@ -17,4 +17,10 @@ export const API_ENDPOINTS = {
     assign: (id: number) => `/devices/${id}/assign`,
     my: (id: number) => `/devices/my/${id}`,
   },
+
+  tickets: {
+    base: '/tickets',
+    byId: (id: number) => `/tickets/${id}`,
+    my: (userId: number,deviceId: number) => `/users/${userId}/tickets/${deviceId}/devices`,
+  }
 };

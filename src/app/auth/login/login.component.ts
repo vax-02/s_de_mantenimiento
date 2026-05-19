@@ -13,17 +13,19 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   errorMessage: string = '';
-
+  loading: boolean = false;
   constructor(
     private router: Router,
     private userService: UserService,
   ) {}
 
   login() {
+    this.loading = true;
     this.errorMessage = '';
 
     if (!this.email || !this.password) {
       this.errorMessage = 'Debe ingresar correo y contraseña';
+      this.loading = false;
       return;
     }
 
@@ -41,7 +43,6 @@ export class LoginComponent {
         }else{
           this.router.navigate(['/home/mydevices']);
         }
-
       },
       error: (err) => {
         console.error('Login failed:', err);
@@ -54,6 +55,7 @@ export class LoginComponent {
         }
       },
     });
+    this.loading = false;
   }
 
   logout() {

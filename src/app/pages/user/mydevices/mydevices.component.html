@@ -1,7 +1,7 @@
 <div class="p-6 bg-gray-100 min-h-screen">
 
   <h1 class="text-2xl font-semibold mb-6">
-    Mis dispositivos 
+    Mis dispositivos
   </h1>
 
 
@@ -14,7 +14,7 @@
         <div *ngFor="let device of devices" class="bg-white p-4 rounded shadow border">
 
           <h2 class="text-lg font-bold">
-            {{ device.brand }} - {{ device.type }}
+            {{ device.brand }} - {{ device.model }} - {{ device.type }}
           </h2>
 
           <p class="text-sm">
@@ -44,7 +44,7 @@
 
           <div class="flex justify-center items-center gap-2 my-4">
             <button (click)="openDetail(device)" class="bg-green-600 text-white px-3 py-1 rounded text-sm">
-              <i class="fa-solid fa-eye"></i>
+              <i class="fa-solid fa-list"></i>
             </button>
 
             <button (click)="openTicket(device)" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">
@@ -83,46 +83,47 @@
     <div class="bg-white w-full max-w-2xl p-6 rounded">
 
       <h2 class="text-xl font-bold mb-4">
-        {{ selectedDevice.name }}
+        {{ selectedDevice.brand }} - {{ selectedDevice.model }} - {{ selectedDevice.type }}
       </h2>
-
-      <p><b>Código:</b> {{ selectedDevice.code }}</p>
-      <p><b>Tipo:</b> {{ selectedDevice.type }}</p>
-
       <hr class="my-3">
 
-      <h3 class="font-semibold mt-4 mb-3">Historial de mantenimiento</h3>
-
+      <h3 class="font-semibold mt-4 mb-3">Historial y estado de mis tickets</h3>
       <div class="relative border-l-2 border-gray-300 ml-3 space-y-6">
-
-        <div *ngIf="selectedDevice.history?.length > 0; else noHistory">
-
-          <!-- AQUÍ VA TU TIMELINE -->
-          <div class="relative border-l-2 border-gray-300 ml-3 space-y-6">
-
-            <div *ngFor="let h of selectedDevice.history" class="ml-4 relative">
-
-              <div class="absolute -left-6 top-1 w-3 h-3 bg-blue-600 rounded-full"></div>
-
-              <div class="bg-gray-50 p-3 rounded-lg shadow-sm">
-                <p class="text-sm font-semibold">{{ h.detail }}</p>
-                <p class="text-xs text-gray-500">
-                  📅 {{ h.reportedAt }} - 🔧 {{ h.fixedAt }}
-                </p>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <ng-template #noHistory>
-          <div class="text-center text-gray-500 py-6">
-            <i class="fa-solid fa-circle-info text-2xl mb-2"></i>
-            <p>No hay historial de mantenimiento para este equipo</p>
-          </div>
-        </ng-template>
+        <table class="w-full table-auto border-collapse">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                Título
+              </th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                Tipo
+              </th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                Estado
+              </th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                Creado el
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ticket of selectedDevice.tickets" class="border-b">
+              <td class="px-4 py-2">
+                {{ ticket.title }}
+              </td>
+              <td class="px-4 py-2">
+                {{ ticket.type == 1 ? 'Hardware' : 'Software' }}
+              </td>
+              <td class="px-4 py-2">
+                  {{ ticket.status == 1? 'En revisión' : 'Aprobado' }}
+                
+              </td>
+              <td class="px-4 py-2">
+                {{ ticket.created_at | date:'dd/MM/yyyy HH:mm' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="mt-4 flex justify-end">
@@ -133,39 +134,110 @@
     </div>
   </div>
 
-  <div *ngIf="ticketDevice" class="fixed inset-0 bg-black/50 flex justify-center items-center">
-
+  <div *ngIf="ticketDevice" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
     <div class="bg-white w-full max-w-xl p-6 rounded">
-
       <h2 class="text-xl font-bold mb-4">
-        Crear Ticket - {{ ticketDevice.name }}
+        Crear Ticket
       </h2>
 
-      <input type="text" placeholder="Título" class="border w-full p-2 mb-2">
-
-      <textarea placeholder="Descripción" class="border w-full p-2 mb-2"></textarea>
-
-      <select class="border w-full p-2 mb-2">
-        <option>Hardware</option>
-        <option>Software</option>
-        <option>Red</option>
-      </select>
-
-      <!-- 📎 ARCHIVOS -->
-      <input type="file" multiple class="mb-3">
-
-      <div class="flex gap-2">
-
-        <button class="bg-red-600 text-white px-4 py-2 rounded">
-          Crear Ticket
-        </button>
-
-        <button (click)="ticketDevice = null" class="bg-gray-500 text-white px-4 py-2 rounded">
-          Cancelar
-        </button>
-
+      <!-- MENSAJE DE CONFIRMACIÓN/ERROR -->
+      <div *ngIf="ticketMessage.type" class="mb-4 p-3 rounded"
+        [ngClass]="ticketMessage.type === 'success' ? 'bg-green-100 text-green-700 border border-green-400' : 'bg-red-100 text-red-700 border border-red-400'">
+        {{ ticketMessage.text }}
       </div>
 
+      <form (ngSubmit)="addTicket()" enctype="multipart/form-data">
+
+        <!-- TÍTULO -->
+        <div class="mb-3">
+          <input type="text" name="title" placeholder="Título" [(ngModel)]="ticketTitle"
+            class="border w-full p-2 rounded" required minlength="3" [disabled]="isCreatingTicket">
+        </div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="mb-3">
+          <textarea name="description" placeholder="Descripción" [(ngModel)]="ticketDescription"
+            class="border w-full p-2 rounded" required maxlength="200" [disabled]="isCreatingTicket"></textarea>
+        </div>
+
+        <!-- TIPO -->
+        <div class="mb-3">
+          <select name="type" class="border w-full p-2 rounded" [(ngModel)]="ticketType" required
+            [disabled]="isCreatingTicket">
+            <option [ngValue]="null" disabled>
+              Seleccione un tipo
+            </option>
+
+            <option *ngFor="let type of ticketTypes" [ngValue]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+        </div>
+        <!-- ARCHIVOS -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Adjuntar archivos (PDF e imágenes)
+          </label>
+          <label
+            class="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition"
+            [ngClass]="isCreatingTicket ? 'opacity-50 cursor-not-allowed' : ''">
+            <div class="flex flex-col items-center gap-2 text-gray-600">
+              <i class="fa-solid fa-cloud-arrow-up text-4xl text-blue-500"></i>
+
+              <span class="font-medium">
+                Haz clic para subir archivos
+              </span>
+
+              <span class="text-sm text-gray-500">
+                o arrastra y suelta tus archivos aquí
+              </span>
+
+              <span class="text-xs text-gray-400">
+                Formatos permitidos: PDF, JPG, PNG, GIF, WebP (máx. 5MB)
+              </span>
+            </div>
+            <input type="file" multiple class="hidden" name="files" (change)="onFilesSelected($event)"
+              [disabled]="isCreatingTicket" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp">
+          </label>
+
+          <!-- ARCHIVOS SELECCIONADOS -->
+          <div *ngIf="selectedFiles && selectedFiles.length > 0" class="mt-3">
+            <p class="text-sm font-semibold text-gray-700 mb-2">Archivos seleccionados:</p>
+            <ul class="space-y-2">
+              <li *ngFor="let file of selectedFiles; let i = index"
+                class="flex justify-between items-center bg-gray-100 p-2 rounded text-sm">
+                <span class="truncate">
+                  <i class="fa-solid fa-file"></i> {{ file.name }} ({{ (file.size / 1024).toFixed(2) }}KB)
+                </span>
+                <button type="button" (click)="removeFile(i)" class="text-red-500 hover:text-red-700"
+                  [disabled]="isCreatingTicket">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="flex justify-end gap-2">
+
+          <button type="button" (click)="ticketDevice = null"
+            class="bg-gray-500 text-white px-4 py-2 rounded disabled:opacity-50" [disabled]="isCreatingTicket">
+            Cancelar
+          </button>
+
+          <button type="submit"
+            class="bg-red-600 text-white px-4 py-2 rounded disabled:opacity-50 flex items-center gap-2"
+            [disabled]="isCreatingTicket">
+            <span *ngIf="!isCreatingTicket">Crear Ticket</span>
+            <span *ngIf="isCreatingTicket">
+              <i class="fa-solid fa-spinner animate-spin"></i> Creando...
+            </span>
+          </button>
+
+        </div>
+
+      </form>
     </div>
   </div>
 
@@ -268,7 +340,8 @@
 
             <i class="fa-solid fa-paperclip text-xl"></i>
 
-            <input type="file" multiple hidden (change)="onFileSelected($event)">
+            <input type="file" multiple hidden (change)="onFilesSelected($event)"
+              accept=".pdf,.jpg,.jpeg,.png,.gif,.webp">
           </label>
 
           <!-- SEND -->

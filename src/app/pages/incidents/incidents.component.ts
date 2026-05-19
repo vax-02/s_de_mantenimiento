@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { TicketService } from '../../services/ticket.service';
 
 interface Attachment {
   name: string;
@@ -10,7 +11,7 @@ interface Attachment {
 }
 
 interface Comment {
-  user: string;
+  user: User;
   message: string;
   date: string;
   attachments?: Attachment[];
@@ -20,12 +21,16 @@ interface Incident {
   id: number;
   title: string;
   description: string;
-  user: string;
-  status: string;
-  date: string;
+  user: User;
+  status: string | number;
+  created_at: string;
   comments: Comment[];
 }
-
+interface User{
+  id: number;
+  name: string;
+  email: string;
+}
 @Component({
   selector: 'app-incidents',
   standalone: true,
@@ -59,10 +64,21 @@ export class IncidentsComponent {
 
   statuses = ['Abierta', 'Cerrada'];
 
-  constructor() {
+  constructor(private ticketService: TicketService) {
     this.refresh();
   }
+  ngOnInit()
+  {
+    this.loadIncidents();
+  }
+  loadIncidents() {
+    this.ticketService.getAll().subscribe((data: any) => {
+      this.incidents = data;
+      console.log(this.incidents[0].user.name);
 
+      this.refresh();
+    });
+  }
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   scrollToBottom() {
@@ -152,7 +168,7 @@ export class IncidentsComponent {
   }*/
   addComment() {
     this.selected?.comments.push({
-      user: 'admin',
+      user: { id: 0, name: 'Admin', email: '' },
       message: this.newComment,
       date: new Date().toISOString(),
       //attachments: this.selectedFiles,
@@ -180,9 +196,9 @@ export class IncidentsComponent {
       id: 0,
       title: '',
       description: '',
-      user: '',
+      user: { id: 0, name: '', email: '' },
       status: 'Abierta',
-      date: '',
+      created_at: '',
       comments: [],
     };
   }

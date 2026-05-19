@@ -20,12 +20,7 @@
         <label class="block text-sm text-gray-600 mb-1">
           Correo electrónico
         </label>
-        <input 
-          type="email"
-          name="email"
-          [(ngModel)]="email"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg 
+        <input type="email" name="email" [(ngModel)]="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg 
                  focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
           placeholder="usuario@empresa.com">
       </div>
@@ -35,14 +30,8 @@
         <label class="block text-sm text-gray-600 mb-1">
           Contraseña
         </label>
-        <input 
-          type="password"
-          name="password"
-          [(ngModel)]="password"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg 
-                 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
-          placeholder="••••••••">
+        <input type="password" name="password" [(ngModel)]="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg 
+                 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500" placeholder="••••••••">
       </div>
 
       <div *ngIf="errorMessage" class="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 p-3 rounded">
@@ -50,11 +39,10 @@
       </div>
 
       <!-- Botón -->
-      <button 
-        type="submit"
-        class="w-full bg-gray-800 text-white py-2 rounded-lg 
-               hover:bg-gray-900 transition">
-        Ingresar
+      <button type="submit" [disabled]="loading" [ngClass]="loading 
+    ? 'bg-gray-400 cursor-not-allowed' 
+    : 'bg-gray-800 hover:bg-gray-900'" class="w-full text-white py-2 rounded-lg transition">
+        {{ loading ? 'Ingresando...' : 'Ingresar' }}
       </button>
 
     </form>
